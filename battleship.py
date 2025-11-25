@@ -1,8 +1,8 @@
 # battleship.py - A simple implementation of the Battleship game logic for Sotwerk AB code test.
 
-grid = [[]]
+grid = []
 grid_size = 10
-num_ships = 8
+num_ships = 5
 bullets_left = 50
 game_over = False
 num_ships_sunk = 0
@@ -31,8 +31,24 @@ def try_to_place_ship_on_grid(row, col, direction, ship_length):
 # Creates the grid and places all ships.
 def create_grid():
     global grid, grid_size, num_ships, ship_positions
-    pass
-    return try_to_place_ship_on_grid(0, 0, 0, 0)
+
+    # Create an empty grid
+    grid = []
+    for row in range(grid_size):
+        new_row = []
+        for col in range(grid_size):
+            new_row.append(Cell.EMPTY)
+        grid.append(new_row)
+
+    # Reset ship positions
+    ship_positions = []
+
+    # Call ship placement function
+    for i in range(num_ships):
+        try_to_place_ship_on_grid(0, 0, 0, 3)  # Example values for now
+
+    return grid
+
 
 # Prints the grid to the console.
 def print_grid():
