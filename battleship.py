@@ -2,7 +2,8 @@
 
 grid = []
 grid_size = 10
-num_ships = 5
+fleet = [5, 4, 3, 3, 2] # lengths of ships - Carrier, Battleship, Cruiser, Submarine, Destroyer
+num_ships = len(fleet)
 bullets_left = 50
 game_over = False
 num_ships_sunk = 0
