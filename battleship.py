@@ -1,3 +1,5 @@
+# battleship.py - A simple implementation of the Battleship game logic for Sotwerk AB code test.
+
 grid = [[]]
 grid_size = 10
 num_ships = 8
@@ -7,41 +9,50 @@ num_ships_sunk = 0
 ship_positions = [[]]
 alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
+# Validates and places a ship on the grid if the position is free.
 def validate_grid_and_place_ship(start_row, end_row, start_col, end_col):
     pass
 
+# Tries to place a ship starting from a position in a direction.
 def try_to_place_ship_on_grid(row, col, direction, ship_length):
     global grid_size
     pass
     return validate_grid_and_place_ship(0, 0, 0, 0)
 
+# Creates the grid and places all ships.
 def create_grid():
     global grid, grid_size, num_ships, ship_positions
     pass
     return try_to_place_ship_on_grid(0, 0, 0, 0)
 
+# Prints the grid to the console.
 def print_grid():
     global grid, alphabet
     pass
 
+# Accepts and validates player input for shooting.
 def accept_valid_player_placement():
     global alphabet, grid
     pass
     return 0, 0
 
+# Checks if a ship has been fully sunk.
 def check_if_ship_sunk(row, col):
     global ship_positions, grid
     pass
 
+# Handles a player's shot.
 def shoot_bullet():
     global grid, num_ships_sunk, bullets_left
     row, col = accept_valid_player_placement()
     pass
 
+# Determines if the game is over.
 def check_game_over():
     global num_ships, num_ships_sunk, bullets_left, game_over
     pass
 
+# Runs the main game loop.
 def main():
     global game_over
     create_grid()
@@ -50,3 +61,6 @@ def main():
         shoot_bullet()
         check_game_over()
     print("Game Over!")
+
+if __name__ == "__main__":
+    main()
