@@ -9,6 +9,15 @@ num_ships_sunk = 0
 ship_positions = [[]]
 alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
+from enum import Enum
+
+class Cell(Enum):
+    EMPTY = 0        # no ship, not shot
+    SHIP = 1         # ship present, not shot
+    MISS = -1        # water shot
+    HIT = 2          # ship shot
+
+
 # Validates and places a ship on the grid if the position is free.
 def validate_grid_and_place_ship(start_row, end_row, start_col, end_col):
     pass
