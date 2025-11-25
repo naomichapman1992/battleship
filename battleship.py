@@ -50,7 +50,13 @@ def shoot_bullet():
 # Determines if the game is over.
 def check_game_over():
     global num_ships, num_ships_sunk, bullets_left, game_over
-    pass
+
+    if num_ships_sunk == num_ships:
+        print("Congratulations! You sank all the ships!")
+        game_over = True
+    elif bullets_left <= 0:
+        print("Out of bullets! Game over, you lose.")
+        game_over = True
 
 # Runs the main game loop.
 def main():
