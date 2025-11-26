@@ -103,26 +103,19 @@ def try_to_place_ship_on_grid(row, col, direction, ship_length):
     pass
     return validate_grid_and_place_ship(0, 0, 0, 0)
 
-# Creates the grid and places all ships.
+# Creates the grid and initializes per-player state.
 def create_grid():
-    global grid, grid_size, num_ships, ship_positions
+    global player_grids, player_ship_positions, ships_sunk, current_player, game_over
 
-    # Create an empty grid
-    grid = []
-    for row in range(grid_size):
-        new_row = []
-        for col in range(grid_size):
-            new_row.append(Cell.EMPTY)
-        grid.append(new_row)
-
-    # Reset ship positions
-    ship_positions = []
-
-    # Call ship placement function
-    for i in range(num_ships):
-        try_to_place_ship_on_grid(0, 0, 0, 3)  # Example values for now
-
-    return grid
+    # New game state
+    player_grids = [
+        [[Cell.EMPTY] * grid_size for _ in range(grid_size)],
+        [[Cell.EMPTY] * grid_size for _ in range(grid_size)]
+    ]
+    player_ship_positions = [[], []]
+    ships_sunk = [0, 0]
+    current_player = 0
+    game_over = False
 
 
 # Prints the grid to the console.
