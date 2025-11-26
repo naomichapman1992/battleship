@@ -172,14 +172,33 @@ def check_game_over():
         print("Out of bullets! Game over, you lose.")
         game_over = True
 
+def switch_player():
+    global current_player
+    current_player = 1 - current_player
+    input("\nPress ENTER and hand over to the next player...")
+    print("\n" * 50)
+
+
 # Runs the main game loop.
 def main():
-    global game_over
+    global game_over, current_player
+
+    # Optionally ask for names
+    name1 = input("Name for Player 1 (leave blank for 'Player 1'): ").strip() or "Player 1"
+    name2 = input("Name for Player 2 (leave blank for 'Player 2'): ").strip() or "Player 2"
+    player_names[0] = name1
+    player_names[1] = name2
+
     create_grid()
-    print_grid()
+    game_over = False
+    current_player = 0
+
     while not game_over:
         shoot_bullet()
         check_game_over()
+        if not game_over:
+            switch_player()
+
     print("Game Over!")
 
 if __name__ == "__main__":
