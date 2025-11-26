@@ -1,5 +1,6 @@
 # battleship.py - A simple implementation of the Battleship game logic for Sotwerk AB code test.
 from enum import Enum
+import score_board
 
 # Global variables
 grid_size = 10
@@ -12,7 +13,6 @@ fleet = [
 ]
 num_ships = len(fleet)
 alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-SCOREBOARD_FILE = "scoreboard.txt"
 
 class Cell(Enum):
     EMPTY = 0        # no ship, not shot
@@ -27,6 +27,37 @@ ships_sunk = [0, 0]                    # ships sunk per player
 player_names = ["Player 1", "Player 2"]
 current_player = 0
 game_over = False
+
+# Reads and validates a coordinate like "A5" and returns (row, col) as 0-based ints.
+def input_coordinate(prompt):
+    while True:
+        text = input(prompt).strip().upper()
+
+        if len(text) < 2:
+            print("Invalid format. Use e.g. A5.")
+            continue
+
+        col_letter = text[0]
+        row_part = text[1:]
+
+        if col_letter not in alphabet[:grid_size]:
+            print("Invalid column letter.")
+            continue
+
+        try:
+            row = int(row_part) - 1
+        except ValueError:
+            print("Row must be a number.")
+            continue
+
+        col = alphabet.index(col_letter)
+
+        if not (0 <= row < grid_size and 0 <= col < grid_size):
+            print("Coordinates out of bounds.")
+            continue
+
+        return row, col
+
 
 # Validates and places a ship on the grid if the position is free.
 def validate_grid_and_place_ship(start_row, end_row, start_col, end_col):
@@ -81,9 +112,16 @@ def print_grid():
 
 # Accepts and validates player input for shooting.
 def accept_valid_player_placement():
-    global alphabet, grid
-    pass
-    return 0, 0
+    global grid
+    while True:
+        row, col = input_coordinate("Shoot (e.g. A5): ")
+
+        # Make sure we don't shoot the same spot twice
+        if grid[row][col] in (Cell.HIT, Cell.MISS):
+            print("You already shot there, try again.")
+            continue
+
+        return row, col
 
 # Checks if a ship has been fully sunk.
 def check_if_ship_sunk(row, col):
