@@ -82,7 +82,7 @@ Game ends immediately when one player sinks all enemy ships.
 ```
 battleship/
 │ battleship.py       ← game logic & scoreboard
-| Home assignment.pdf ← instructions
+│ home_assignment.pdf ← instructions
 │ README.md           ← you are reading this!
 ```
 

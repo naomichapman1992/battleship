@@ -30,13 +30,16 @@ player_hits = [0, 0]
 player_misses = [0, 0]
 shots_taken = [0, 0]
 
-
 # Used during ship placement to know which grid/list to update
 placing_grid = None
 placing_ship_positions = None
 
-# Reads and validates a coordinate like "A5" and returns (row, col) as 0-based ints.
 def input_coordinate(prompt):
+    """
+    Reads a user-entered coordinate like 'A5',
+    validates its format and board boundaries,
+    and returns (row, col) as 0-indexed integers.
+    """
     while True:
         text = input(prompt).strip().upper()
 
@@ -66,8 +69,12 @@ def input_coordinate(prompt):
         return row, col
 
 
-# Validates and places a ship on the grid if the position is free.
 def validate_grid_and_place_ship(start_row, end_row, start_col, end_col):
+    """
+    Attempts to place a ship between two grid points.
+    Only allows horizontal or vertical placement.
+    Returns True if successfully placed, otherwise False.
+    """
     global placing_grid, placing_ship_positions
 
     # Must be Horizontal or Vertical
@@ -100,8 +107,12 @@ def validate_grid_and_place_ship(start_row, end_row, start_col, end_col):
     return True
 
 
-# Tries to place a ship starting from a position in a direction.
 def try_to_place_ship_on_grid(row, col, direction, ship_length):
+    """
+    Converts a starting coordinate and direction (H/V)
+    into a placement range and sends it for validation.
+    Returns True/False depending on placement success.
+    """
     # Direction: 0 = horizontal, 1 = vertical
     if direction == 0:
         start_row = row
@@ -116,8 +127,12 @@ def try_to_place_ship_on_grid(row, col, direction, ship_length):
 
     return validate_grid_and_place_ship(start_row, end_row, start_col, end_col)
 
-# Prints a single grid to the console.
 def print_single_grid(title, grid, reveal_ships: bool):
+    """
+    Prints a grid with column letters and row numbers.
+    Shows ship positions only if reveal_ships=True.
+    Marks hits as X and misses as O.
+    """
     print(f"\n{title}")
     print("   " + " ".join(alphabet[i] for i in range(grid_size)))
 
@@ -139,8 +154,12 @@ def print_single_grid(title, grid, reveal_ships: bool):
     print()
 
 
-# Creates the grid and lets both players place all ships.
 def create_grid():
+    """
+    Runs full ship placement for both players.
+    Prompts each user for ship location and orientation
+    and stores their final board before the match begins.
+    """
     global player_grids, player_ship_positions, ships_sunk
     global placing_grid, placing_ship_positions
 
@@ -217,8 +236,11 @@ def create_grid():
 
 
 
-# Prints the grid to the console.
 def print_grid():
+    """
+    Displays the current player's board and the opponent's board.
+    Own ships are visible; enemy ships stay hidden unless hit.
+    """
     attacker = current_player
     defender = 1 - current_player
 
@@ -232,8 +254,12 @@ def print_grid():
         player_grids[defender],
         reveal_ships=False
     )
-# Shows the live score of both players.
+
 def show_live_score():
+    """
+    Prints a live scoreboard after each shot.
+    Displays hits, misses, and total ships sunk for both players.
+    """
     print("\n--- LIVE SCORE ---")
     for i in (0, 1):
         hits = player_hits[i]
@@ -248,8 +274,12 @@ def show_live_score():
     print()
 
 
-# Accepts and validates player input for shooting.
 def accept_valid_player_placement():
+    """
+    Prompts current player to enter a coordinate to shoot.
+    Rejects locations already targeted and repeats input request.
+    Returns (row, col) when valid.
+    """
     defender = 1 - current_player
     target_grid = player_grids[defender]
 
@@ -264,8 +294,11 @@ def accept_valid_player_placement():
         return row, col
 
 
-# Checks if a ship has been fully sunk.
 def check_if_ship_sunk(row, col):
+    """
+    Checks whether a newly hit ship is now fully destroyed.
+    If so, increments the current player's sunk-ship count.
+    """
     defender = 1 - current_player
     grid = player_grids[defender]
 
@@ -276,8 +309,12 @@ def check_if_ship_sunk(row, col):
             return
 
 
-# Handles a player's shot.
 def shoot_bullet():
+    """
+    Handles one complete firing turn.
+    Takes input, marks hit/miss, updates statistics,
+    and checks if the attacked ship is sunk.
+    """
     global player_hits, player_misses, shots_taken
 
     defender = 1 - current_player
@@ -302,9 +339,11 @@ def shoot_bullet():
         player_misses[current_player] += 1
 
 
-
-# Determines if the game is over.
 def check_game_over():
+    """
+    Evaluates whether any player has sunk all enemy ships.
+    If so, prints the winner and ends the game.
+    """
     global game_over
 
     for i in (0, 1):
@@ -316,17 +355,23 @@ def check_game_over():
 
 
 
-
-# Switches to the other player.
 def switch_player():
+    """
+    Alternates active player after each turn.
+    Pauses for ENTER to prevent board peeking.
+    """
     global current_player
     current_player = 1 - current_player
     input("\nPress ENTER and hand over to the next player...")
     print("\n" * 50)
 
 
-# Runs the main game loop.
 def main():
+    """
+    Game entry point.
+    Sets player names, runs ship placement,
+    loops turn-by-turn until one player wins.
+    """
     global game_over, current_player
 
     # Ask for names
