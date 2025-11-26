@@ -171,7 +171,8 @@ def check_game_over():
     elif bullets_left <= 0:
         print("Out of bullets! Game over, you lose.")
         game_over = True
-
+        
+# Switches to the other player.
 def switch_player():
     global current_player
     current_player = 1 - current_player
