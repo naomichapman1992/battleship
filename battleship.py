@@ -261,20 +261,38 @@ def check_if_ship_sunk(row, col):
 
 # Handles a player's shot.
 def shoot_bullet():
-    global grid, num_ships_sunk, bullets_left
+    defender = 1 - current_player
+    grid = player_grids[defender]
+
+    print(f"\n=== {player_names[current_player]}'s turn ===")
+    print_grid()
+
     row, col = accept_valid_player_placement()
-    pass
+    cell = grid[row][col]
+
+    if cell == Cell.SHIP:
+        print("Hit!")
+        grid[row][col] = Cell.HIT
+        check_if_ship_sunk(row, col)
+    else:
+        print("Miss.")
+        grid[row][col] = Cell.MISS
+
 
 # Determines if the game is over.
 def check_game_over():
-    global num_ships, num_ships_sunk, bullets_left, game_over
+    global game_over
 
-    if num_ships_sunk == num_ships:
-        print("Congratulations! You sank all the ships!")
-        game_over = True
-    elif bullets_left <= 0:
-        print("Out of bullets! Game over, you lose.")
-        game_over = True
+    for i in (0, 1):
+        if ships_sunk[i] == num_ships:
+            winner = player_names[1 - i]
+            loser = player_names[i]
+
+            print(f"\nAll ships of {loser} are sunk!")
+            print(f"{winner} wins!")
+            game_over = True
+            return
+
 
 # Switches to the other player.
 def switch_player():
