@@ -1,5 +1,6 @@
 # battleship.py - A simple implementation of the Battleship game logic for Sotwerk AB code test.
 from enum import Enum
+import random
 
 # Global variables
 grid_size = 10
@@ -106,6 +107,45 @@ def validate_grid_and_place_ship(start_row, end_row, start_col, end_col):
     placing_ship_positions.append(coords)
     return True
 
+def place_ship_randomly(ship_name, ship_len):
+    """
+    Randomly places a single ship of given length on placing_grid.
+    Retries until a valid non-overlapping position is found.
+    """
+    global placing_grid, placing_ship_positions
+
+    while True:
+        direction = random.choice(["H", "V"])
+        row = random.randint(0, grid_size - 1)
+        col = random.randint(0, grid_size - 1)
+
+        if direction == "H":
+            start_row = row
+            end_row = row
+            start_col = col
+            end_col = col + ship_len - 1
+        else:  # V
+            start_row = row
+            end_row = row + ship_len - 1
+            start_col = col
+            end_col = col
+
+        # Bounds check
+        if not (0 <= start_row < grid_size and 0 <= end_row < grid_size and
+                0 <= start_col < grid_size and 0 <= end_col < grid_size):
+            continue  # try again
+
+        # Try to place the ship
+        if validate_grid_and_place_ship(start_row, end_row, start_col, end_col):
+            coords = placing_ship_positions[-1]
+            placing_ship_positions[-1] = {
+                "name": ship_name,
+                "coords": coords,
+            }
+            print(f"✔ {ship_name} placed randomly.")
+            break
+
+
 
 def print_single_grid(title, grid, reveal_ships: bool):
     """
@@ -137,8 +177,7 @@ def print_single_grid(title, grid, reveal_ships: bool):
 def create_grid():
     """
     Runs full ship placement for both players.
-    Prompts each user for ship location and orientation
-    and stores their final board before the match begins.
+    Players can choose manual or random placement.
     """
     global player_grids, player_ship_positions, ships_sunk
     global placing_grid, placing_ship_positions
@@ -152,7 +191,20 @@ def create_grid():
 
         print(f"\n--- {name}: Place your ships ---")
 
+        # Let player choose placement mode
+        mode = input(
+            "Do you want to place your ships manually or randomly? [M/R]: "
+        ).strip().upper()
+        if mode not in ("M", "R"):
+            mode = "M"  # default to manual
+
         for ship_name, ship_len in fleet:
+            if mode == "R":
+                # Random placement: no questions asked per ship
+                place_ship_randomly(ship_name, ship_len)
+                continue
+
+            # Manual placement (your previous logic)
             while True:
                 print_single_grid(
                     title=f"{name} - Current ship layout",
@@ -213,6 +265,7 @@ def create_grid():
 
     input("\nBoth players done. Press ENTER to start the battle...")
     print("\n" * 50)
+
 
 
 def print_grid():

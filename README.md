@@ -10,6 +10,7 @@ Players manually place ships, take turns firing shots, and the game tracks hits,
 |--------|:---:|
 | 10x10 board per player | ✔ |
 | Manual ship placement | ✔ |
+| Optional Random Ship Placement | ✔ |
 | Hit / Miss tracking | ✔ |
 | Live Scoreboard | ✔ |
 | Win detection on all ships sunk | ✔ |
@@ -19,8 +20,15 @@ Players manually place ships, take turns firing shots, and the game tracks hits,
 
 ## 🚀 How to Run
 
+Original version:
 ```bash
 python battleship.py
+```
+
+Modular enhanced version:
+```bash
+cd modular_version
+python main.py
 ```
 
 No external dependencies required — Python only.
@@ -40,22 +48,21 @@ No external dependencies required — Python only.
 | Submarine | 3 |
 | Destroyer | 2 |
 
-Ships are placed by entering:
+Ships may be placed manually or **automatically/randomly**.
 
+Example manual placement:
 ```
 A5   ← starting coordinate
 H/V  ← Horizontal or Vertical
 ```
 
-3. Players take turns firing shots at opposing grid coordinates.
+3. Players take turns firing shots at opposing coordinates.
 4. The scoreboard updates automatically after every shot.
 5. The first player to sink *all enemy ships* wins.
 
 ---
 
-## 📊 Live Scoreboard Displayed in Game
-
-Example output during gameplay:
+## 📊 Live Scoreboard Example
 
 ```
 --- LIVE SCORE ---
@@ -65,45 +72,53 @@ Bob:   1 hit, 4 misses, 0 ship/s sunk
 
 ---
 
-## 🏁 Win Condition
+## 🏛 Project Structure
 
-Game ends immediately when one player sinks all enemy ships.
+### Original Version
+```
+battleship.py       ← single‑file implementation (requested baseline)
+test_battleship.py  ← unit tests
+README.md           ← documentation
+```
+
+### Modular Version (recommended)
+```
+modular_version/
+│── main.py            ← game entry point
+│── board.py           ← grid + rendering
+│── placement.py       ← manual + random ship placement
+│── gameplay.py        ← turns, hits, misses, scoreboard
+│── state.py           ← shared game variables + enums
+```
+
+✔ More readable  
+✔ Better testability  
+✔ Ready for expansion (AI, GUI, networking)
 
 ---
 
-## 📂 File Structure
+## 🔥 Future Enhancements
 
-```
-battleship/
-│ battleship.py       ← game logic & scoreboard
-│ test_battleship.py  ← unit tests
-│ README.md           ← you are reading this!
-```
-
----
-
-## 🔥 Future Improvements
-
-| Idea | Status |
+| Feature | Status |
 |---|:---:|
-| AI single‑player mode | ☐ |
-| Persistent scoreboard storage | ☐ |
-| GUI board (Tkinter / Web) | ☐ |
-| Random ship placement option | ☐ |
+| AI opponent | ☐ |
+| Online/network multiplayer | ☐ |
+| GUI version | ☐ |
+| Save/load games | ☐ |
+| Tracking accuracy & stats summary | ☐ |
 
 ---
 
 ## 🧠 AI Usage Disclosure
 
-Some elements of this project were supported using AI tools to improve quality and productivity:
+AI was used for small productivity boosts, including:
 
-| Task | AI Involvement |
-|---|---|
-| README structure & formatting | ✔ |
-| Suggestions for unit testing approach | ✔ |
-| Small refactor & clarity improvements | ✔ |
+| Contribution | AI Helped |
+|---|:---:|
+| README formatting & structure | ✔ |
+| Modular refactor planning | ✔ |
+| Suggestions for code clarity & naming | ✔ |
 
-Game logic, turn handling, placement rules, state management, and scoreboard behavior were developed manually.
+Core gameplay logic, turn handling, rules, and implementation remain hand‑written.
 
 ---
-
