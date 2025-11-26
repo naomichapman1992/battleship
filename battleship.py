@@ -309,14 +309,11 @@ def check_game_over():
 
     for i in (0, 1):
         if ships_sunk[i] == num_ships:
-            winner = player_names[1 - i]
-            loser = player_names[i]
-
-            print(f"\nAll ships of {loser} are sunk!")
-            print(f"{winner} wins!")
-
+            print(f"\n{player_names[i]} has destroyed all enemy ships!")
+            print(f"{player_names[i]} wins!")
             game_over = True
             return
+
 
 
 
@@ -332,7 +329,7 @@ def switch_player():
 def main():
     global game_over, current_player
 
-    # Optionally ask for names
+    # Ask for names
     name1 = input("Name for Player 1: ").strip() or "Player 1"
     name2 = input("Name for Player 2: ").strip() or "Player 2"
     player_names[0] = name1
