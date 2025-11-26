@@ -61,7 +61,41 @@ def input_coordinate(prompt):
 
 # Validates and places a ship on the grid if the position is free.
 def validate_grid_and_place_ship(start_row, end_row, start_col, end_col):
-    pass
+    global placing_grid, placing_ship_positions
+
+    # If both row and col change → diagonal = not allowed
+    if start_row != end_row and start_col != end_col:
+        return False
+
+    coords = []
+
+    # Horizontal movement
+    if start_row == end_row:
+        rng = range(start_col, end_col + (1 if end_col > start_col else -1), 
+                    1 if end_col > start_col else -1)
+
+        for c in rng:
+            if c >= grid_size or placing_grid[start_row][c] != Cell.EMPTY:
+                return False
+            coords.append((start_row, c))
+
+    # Vertical movement
+    else:
+        rng = range(start_row, end_row + (1 if end_row > start_row else -1),
+                    1 if end_row > start_row else -1)
+
+        for r in rng:
+            if r >= grid_size or placing_grid[r][start_col] != Cell.EMPTY:
+                return False
+            coords.append((r, start_col))
+
+    # Place the ship
+    for r, c in coords:
+        placing_grid[r][c] = Cell.SHIP
+
+    placing_ship_positions.append(coords)
+    return True
+
 
 # Tries to place a ship starting from a position in a direction.
 def try_to_place_ship_on_grid(row, col, direction, ship_length):
