@@ -1,16 +1,18 @@
 # battleship.py - A simple implementation of the Battleship game logic for Sotwerk AB code test.
-
-grid = []
-grid_size = 10
-fleet = [5, 4, 3, 3, 2] # lengths of ships - Carrier, Battleship, Cruiser, Submarine, Destroyer
-num_ships = len(fleet)
-bullets_left = 50
-game_over = False
-num_ships_sunk = 0
-ship_positions = [[]]
-alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-
 from enum import Enum
+
+# Global variables
+grid_size = 10
+fleet = [
+    ("Carrier", 5),
+    ("Battleship", 4),
+    ("Cruiser", 3),
+    ("Submarine", 3),
+    ("Destroyer", 2),
+]
+num_ships = len(fleet)
+alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+SCOREBOARD_FILE = "scoreboard.txt"
 
 class Cell(Enum):
     EMPTY = 0        # no ship, not shot
@@ -18,6 +20,13 @@ class Cell(Enum):
     MISS = -1        # water shot
     HIT = 2          # ship shot
 
+# Per-player state
+player_grids = [None, None]            
+player_ship_positions = [None, None]   
+ships_sunk = [0, 0]                    # ships sunk per player
+player_names = ["Player 1", "Player 2"]
+current_player = 0
+game_over = False
 
 # Validates and places a ship on the grid if the position is free.
 def validate_grid_and_place_ship(start_row, end_row, start_col, end_col):
@@ -54,7 +63,21 @@ def create_grid():
 # Prints the grid to the console.
 def print_grid():
     global grid, alphabet
-    pass
+    print("\n   " + " ".join(alphabet[i] for i in range(grid_size)))
+
+    for r in range(grid_size):
+        row_display = []
+        for c in range(grid_size):
+            cell = grid[r][c]
+            if cell == Cell.HIT:
+                row_display.append("X")
+            elif cell == Cell.MISS:
+                row_display.append("O")
+            else:
+                row_display.append(".")  # hide ships
+        print(f"{r+1:2} " + " ".join(row_display))
+
+    print()
 
 # Accepts and validates player input for shooting.
 def accept_valid_player_placement():
