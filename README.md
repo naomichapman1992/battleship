@@ -89,7 +89,6 @@ modular_version/
 │── gameplay.py        ← turns, hits, misses, scoreboard
 │── main.py            ← game entry point
 │── placement.py       ← manual and random ship placement
-│── placement.py       ← manual and random ship placement
 │── state.py           ← shared game variables and enums
 ```
 
