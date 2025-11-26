@@ -1,6 +1,5 @@
-
 # Battleship – 2‑Player Console Game
-A fully interactive Battleship game built for **Sotwerk AB** assignment.  
+A fully interactive Battleship game built for **Sotwerk AB** coding assignment.  
 Players manually place ships, take turns firing shots, and the game tracks hits, misses & ships sunk live during gameplay.
 
 ---
@@ -45,7 +44,7 @@ Ships are placed by entering:
 
 ```
 A5   ← starting coordinate
-H/V ← Horizontal or Vertical
+H/V  ← Horizontal or Vertical
 ```
 
 3. Players take turns firing shots at opposing grid coordinates.
@@ -56,12 +55,7 @@ H/V ← Horizontal or Vertical
 
 ## 📊 Live Scoreboard Displayed in Game
 
-| Player | Hits | Misses | Ships Sunk |
-|---|:---:|:---:|:---:|
-| Player 1 | dynamic | dynamic | dynamic |
-| Player 2 | dynamic | dynamic | dynamic |
-
-Example output after a turn:
+Example output during gameplay:
 
 ```
 --- LIVE SCORE ---
@@ -82,7 +76,7 @@ Game ends immediately when one player sinks all enemy ships.
 ```
 battleship/
 │ battleship.py       ← game logic & scoreboard
-│ home_assignment.pdf ← instructions
+│ test_battleship.py  ← unit tests
 │ README.md           ← you are reading this!
 ```
 
@@ -96,6 +90,20 @@ battleship/
 | Persistent scoreboard storage | ☐ |
 | GUI board (Tkinter / Web) | ☐ |
 | Random ship placement option | ☐ |
+
+---
+
+## 🧠 AI Usage Disclosure
+
+Some elements of this project were supported using AI tools to improve quality and productivity:
+
+| Task | AI Involvement |
+|---|---|
+| README structure & formatting | ✔ |
+| Suggestions for unit testing approach | ✔ |
+| Small refactor & clarity improvements | ✔ |
+
+Game logic, turn handling, placement rules, state management, and scoreboard behavior were developed manually.
 
 ---
 
