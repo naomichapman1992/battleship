@@ -272,7 +272,7 @@ def check_if_ship_sunk(row, col):
     for ship in player_ship_positions[defender]:
         if (row, col) in ship["coords"] and all(grid[r][c] == Cell.HIT for r, c in ship["coords"]):
             print(f"You sank the {ship['name']}!")
-            ships_sunk[defender] += 1
+            ships_sunk[current_player] += 1
             return
 
 
