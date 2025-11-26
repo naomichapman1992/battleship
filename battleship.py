@@ -107,26 +107,6 @@ def validate_grid_and_place_ship(start_row, end_row, start_col, end_col):
     return True
 
 
-def try_to_place_ship_on_grid(row, col, direction, ship_length):
-    """
-    Converts a starting coordinate and direction (H/V)
-    into a placement range and sends it for validation.
-    Returns True/False depending on placement success.
-    """
-    # Direction: 0 = horizontal, 1 = vertical
-    if direction == 0:
-        start_row = row
-        end_row = row
-        start_col = col
-        end_col = col + ship_length - 1
-    else:
-        start_row = row
-        end_row = row + ship_length - 1
-        start_col = col
-        end_col = col
-
-    return validate_grid_and_place_ship(start_row, end_row, start_col, end_col)
-
 def print_single_grid(title, grid, reveal_ships: bool):
     """
     Prints a grid with column letters and row numbers.
@@ -179,7 +159,7 @@ def create_grid():
                     grid=placing_grid,
                     reveal_ships=True,
                 )
-                print(f"Place {ship_name} (len : {ship_len})")
+                print(f"Place {ship_name}(length: {ship_len})")
 
                 row, col = input_coordinate("Start coordinate (e.g. A5): ")
                 direction = input("Direction (H=horizontal, V=vertical): ").strip().upper()
@@ -235,7 +215,6 @@ def create_grid():
     print("\n" * 50)
 
 
-
 def print_grid():
     """
     Displays the current player's board and the opponent's board.
@@ -254,6 +233,7 @@ def print_grid():
         player_grids[defender],
         reveal_ships=False
     )
+
 
 def show_live_score():
     """
@@ -352,7 +332,6 @@ def check_game_over():
             print(f"{player_names[i]} wins!")
             game_over = True
             return
-
 
 
 def switch_player():
