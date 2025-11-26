@@ -97,12 +97,22 @@ def validate_grid_and_place_ship(start_row, end_row, start_col, end_col):
     return True
 
 
-
 # Tries to place a ship starting from a position in a direction.
 def try_to_place_ship_on_grid(row, col, direction, ship_length):
-    global grid_size
-    pass
-    return validate_grid_and_place_ship(0, 0, 0, 0)
+    # Direction: 0 = horizontal, 1 = vertical
+    if direction == 0:
+        start_row = row
+        end_row = row
+        start_col = col
+        end_col = col + ship_length - 1
+    else:
+        start_row = row
+        end_row = row + ship_length - 1
+        start_col = col
+        end_col = col
+
+    return validate_grid_and_place_ship(start_row, end_row, start_col, end_col)
+
 
 # Creates the grid and initializes per-player state.
 def create_grid():
