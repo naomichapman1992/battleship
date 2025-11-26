@@ -1,6 +1,5 @@
 # battleship.py - A simple implementation of the Battleship game logic for Sotwerk AB code test.
 from enum import Enum
-import score_board
 
 # Global variables
 grid_size = 10
@@ -27,6 +26,10 @@ ships_sunk = [0, 0]                    # ships sunk per player
 player_names = ["Player 1", "Player 2"]
 current_player = 0
 game_over = False
+player_hits = [0, 0]
+player_misses = [0, 0]
+shots_taken = [0, 0]
+
 
 # Used during ship placement to know which grid/list to update
 placing_grid = None
@@ -148,7 +151,7 @@ def create_grid():
         placing_grid = [[Cell.EMPTY for _ in range(grid_size)] for _ in range(grid_size)]
         placing_ship_positions = []
 
-        print(f"\n=== {name} - Place your ships ===")
+        print(f"\n--- {name}: Place your ships ---")
 
         for ship_name, ship_len in fleet:
             while True:
@@ -157,13 +160,13 @@ def create_grid():
                     grid=placing_grid,
                     reveal_ships=True,
                 )
-                print(f"Place {ship_name} ({ship_len})")
+                print(f"Place {ship_name} (len : {ship_len})")
 
-                row, col = input_coordinate("  Start coordinate (e.g. A5): ")
-                direction = input("  Direction (H=horizontal, V=vertical): ").strip().upper()
+                row, col = input_coordinate("Start coordinate (e.g. A5): ")
+                direction = input("Direction (H=horizontal, V=vertical): ").strip().upper()
 
                 if direction not in ("H", "V"):
-                    print("  Invalid direction, please choose H or V.")
+                    print("Invalid direction, please choose H or V.")
                     continue
 
                 if direction == "H":
@@ -180,7 +183,7 @@ def create_grid():
                 # Bounds check
                 if not (0 <= start_row < grid_size and 0 <= end_row < grid_size and
                         0 <= start_col < grid_size and 0 <= end_col < grid_size):
-                    print("  Ship would go out of bounds, try again.")
+                    print("Ship would go out of bounds, try again.")
                     continue
 
                 # Try to place the ship
@@ -220,15 +223,29 @@ def print_grid():
     defender = 1 - current_player
 
     print_single_grid(
-        f"{player_names[attacker]} - Your Board",
+        f"Your Board",
         player_grids[attacker],
         reveal_ships=True
     )
     print_single_grid(
-        f"{player_names[attacker]} - Opponent Board",
+        f"{player_names[defender]}'s Board",
         player_grids[defender],
         reveal_ships=False
     )
+# Shows the live score of both players.
+def show_live_score():
+    print("\n--- LIVE SCORE ---")
+    for i in (0, 1):
+        hits = player_hits[i]
+        misses = player_misses[i]
+        sunk = ships_sunk[i]
+
+        print(
+            f"{player_names[i]}: "
+            f"{hits} hits, {misses} misses, "
+            f"{sunk} ship(s) sunk "
+        )
+    print()
 
 
 # Accepts and validates player input for shooting.
@@ -261,22 +278,29 @@ def check_if_ship_sunk(row, col):
 
 # Handles a player's shot.
 def shoot_bullet():
+    global player_hits, player_misses, shots_taken
+
     defender = 1 - current_player
     grid = player_grids[defender]
 
-    print(f"\n=== {player_names[current_player]}'s turn ===")
+    print(f"\n--- {player_names[current_player]}'s turn ---")
     print_grid()
 
     row, col = accept_valid_player_placement()
     cell = grid[row][col]
 
+    shots_taken[current_player] += 1
+
     if cell == Cell.SHIP:
         print("Hit!")
         grid[row][col] = Cell.HIT
+        player_hits[current_player] += 1
         check_if_ship_sunk(row, col)
     else:
         print("Miss.")
         grid[row][col] = Cell.MISS
+        player_misses[current_player] += 1
+
 
 
 # Determines if the game is over.
@@ -290,8 +314,10 @@ def check_game_over():
 
             print(f"\nAll ships of {loser} are sunk!")
             print(f"{winner} wins!")
+
             game_over = True
             return
+
 
 
 # Switches to the other player.
@@ -307,8 +333,8 @@ def main():
     global game_over, current_player
 
     # Optionally ask for names
-    name1 = input("Name for Player 1 (leave blank for 'Player 1'): ").strip() or "Player 1"
-    name2 = input("Name for Player 2 (leave blank for 'Player 2'): ").strip() or "Player 2"
+    name1 = input("Name for Player 1: ").strip() or "Player 1"
+    name2 = input("Name for Player 2: ").strip() or "Player 2"
     player_names[0] = name1
     player_names[1] = name2
 
@@ -318,9 +344,11 @@ def main():
 
     while not game_over:
         shoot_bullet()
+        show_live_score()
         check_game_over()
         if not game_over:
             switch_player()
+
 
     print("Game Over!")
 
