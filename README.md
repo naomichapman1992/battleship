@@ -1,7 +1,7 @@
 
 # Battleship – 2‑Player Console Game
 A fully interactive Battleship game built for **Sotwerk AB** coding assignment.  
-Players manually place ships or select to havre them randomly placed. The players then take turns firing shots and the game tracks hits, misses & ships sunk live during gameplay.
+Players manually place ships or select to have them randomly placed. The players then take turns firing shots and the game tracks hits, misses & ships sunk live during gameplay.
 
 ---
 
