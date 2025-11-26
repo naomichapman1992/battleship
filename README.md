@@ -36,6 +36,22 @@ No external dependencies required — Python only.
 
 ---
 
+## 🧪 Running Unit Tests
+
+Install pytest if not already installed:
+```bash
+pip install pytest
+```
+
+Run tests:
+```bash
+python3 -m pytest test_battleship.py -v
+```
+
+This works even if `pytest` is not globally available in terminal.
+
+---
+
 ## 📌 Gameplay Overview
 
 1. Both players enter their names.
