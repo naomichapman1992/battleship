@@ -113,58 +113,151 @@ def try_to_place_ship_on_grid(row, col, direction, ship_length):
 
     return validate_grid_and_place_ship(start_row, end_row, start_col, end_col)
 
-
-# Creates the grid and initializes per-player state.
-def create_grid():
-    global player_grids, player_ship_positions, ships_sunk, current_player, game_over
-
-    # New game state
-    player_grids = [
-        [[Cell.EMPTY] * grid_size for _ in range(grid_size)],
-        [[Cell.EMPTY] * grid_size for _ in range(grid_size)]
-    ]
-    player_ship_positions = [[], []]
-    ships_sunk = [0, 0]
-    current_player = 0
-    game_over = False
-
-
-# Prints the grid to the console.
-def print_grid():
-    global grid, alphabet
-    print("\n   " + " ".join(alphabet[i] for i in range(grid_size)))
+# Prints a single grid to the console.
+def print_single_grid(title, grid, reveal_ships: bool):
+    print(f"\n{title}")
+    print("   " + " ".join(alphabet[i] for i in range(grid_size)))
 
     for r in range(grid_size):
         row_display = []
         for c in range(grid_size):
             cell = grid[r][c]
-            if cell == Cell.HIT:
-                row_display.append("X")
-            elif cell == Cell.MISS:
-                row_display.append("O")
-            else:
-                row_display.append(".")  # hide ships
-        print(f"{r+1:2} " + " ".join(row_display))
 
+            if cell == Cell.HIT:
+                row_display.append("X")   # shot & hit
+            elif cell == Cell.MISS:
+                row_display.append("O")   # shot but water
+            elif reveal_ships and cell == Cell.SHIP:
+                row_display.append("S")   # show own ships to player
+            else:
+                row_display.append(".")   # hidden or empty
+
+        print(f"{r+1:2} " + " ".join(row_display))
     print()
+
+
+# Creates the grid and lets both players place all ships.
+def create_grid():
+    global player_grids, player_ship_positions, ships_sunk
+    global placing_grid, placing_ship_positions
+
+    ships_sunk = [0, 0]
+
+    for player_index, name in enumerate(player_names):
+        # Empty grid and ship list for this player
+        placing_grid = [[Cell.EMPTY for _ in range(grid_size)] for _ in range(grid_size)]
+        placing_ship_positions = []
+
+        print(f"\n=== {name} - Place your ships ===")
+
+        for ship_name, ship_len in fleet:
+            while True:
+                print_single_grid(
+                    title=f"{name} - Current ship layout",
+                    grid=placing_grid,
+                    reveal_ships=True,
+                )
+                print(f"Place {ship_name} ({ship_len})")
+
+                row, col = input_coordinate("  Start coordinate (e.g. A5): ")
+                direction = input("  Direction (H=horizontal, V=vertical): ").strip().upper()
+
+                if direction not in ("H", "V"):
+                    print("  Invalid direction, please choose H or V.")
+                    continue
+
+                if direction == "H":
+                    start_row = row
+                    end_row = row
+                    start_col = col
+                    end_col = col + ship_len - 1
+                else:  # V
+                    start_row = row
+                    end_row = row + ship_len - 1
+                    start_col = col
+                    end_col = col
+
+                # Bounds check
+                if not (0 <= start_row < grid_size and 0 <= end_row < grid_size and
+                        0 <= start_col < grid_size and 0 <= end_col < grid_size):
+                    print("  Ship would go out of bounds, try again.")
+                    continue
+
+                # Try to place the ship
+                if validate_grid_and_place_ship(start_row, end_row, start_col, end_col):
+                    coords = placing_ship_positions[-1]
+                    placing_ship_positions[-1] = {
+                        "name": ship_name,
+                        "coords": coords,
+                    }
+                    print(f"✔ {ship_name} placed!\n")
+                    break
+                else:
+                    print("  Ship overlaps with another ship or is invalid, try again.")
+
+        # Store grid & ships for this player
+        player_grids[player_index] = placing_grid
+        player_ship_positions[player_index] = placing_ship_positions
+
+        print_single_grid(
+            title=f"{name} - Final ship layout",
+            grid=player_grids[player_index],
+            reveal_ships=True,
+        )
+
+        if player_index == 0:
+            input("\nPlayer 1 done. Press ENTER and pass to Player 2...")
+            print("\n" * 50)
+
+    input("\nBoth players done. Press ENTER to start the battle...")
+    print("\n" * 50)
+
+
+
+# Prints the grid to the console.
+def print_grid():
+    attacker = current_player
+    defender = 1 - current_player
+
+    print_single_grid(
+        f"{player_names[attacker]} - Your Board",
+        player_grids[attacker],
+        reveal_ships=True
+    )
+    print_single_grid(
+        f"{player_names[attacker]} - Opponent Board",
+        player_grids[defender],
+        reveal_ships=False
+    )
+
 
 # Accepts and validates player input for shooting.
 def accept_valid_player_placement():
-    global grid
+    defender = 1 - current_player
+    target_grid = player_grids[defender]
+
     while True:
         row, col = input_coordinate("Shoot (e.g. A5): ")
 
-        # Make sure we don't shoot the same spot twice
-        if grid[row][col] in (Cell.HIT, Cell.MISS):
+        # Ensure not to shoot the same spot twice
+        if target_grid[row][col] in (Cell.HIT, Cell.MISS):
             print("You already shot there, try again.")
             continue
 
         return row, col
 
+
 # Checks if a ship has been fully sunk.
 def check_if_ship_sunk(row, col):
-    global ship_positions, grid
-    pass
+    defender = 1 - current_player
+    grid = player_grids[defender]
+
+    for ship in player_ship_positions[defender]:
+        if (row, col) in ship["coords"] and all(grid[r][c] == Cell.HIT for r, c in ship["coords"]):
+            print(f"You sank the {ship['name']}!")
+            ships_sunk[defender] += 1
+            return
+
 
 # Handles a player's shot.
 def shoot_bullet():
