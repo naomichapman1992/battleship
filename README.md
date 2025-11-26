@@ -1,6 +1,7 @@
+
 # Battleship – 2‑Player Console Game
 A fully interactive Battleship game built for **Sotwerk AB** coding assignment.  
-Players manually place ships, take turns firing shots, and the game tracks hits, misses & ships sunk live during gameplay.
+Players manually place ships or select to havre them randomly placed. The players then take turns firing shots and the game tracks hits, misses & ships sunk live during gameplay.
 
 ---
 
@@ -48,12 +49,12 @@ No external dependencies required — Python only.
 | Submarine | 3 |
 | Destroyer | 2 |
 
-Ships may be placed manually or **automatically/randomly**.
+Ships may be placed manually or randomly.
 
 Example manual placement:
 ```
 A5   ← starting coordinate
-H/V  ← Horizontal or Vertical
+H/V  ← horizontal or vertical
 ```
 
 3. Players take turns firing shots at opposing coordinates.
@@ -76,7 +77,7 @@ Bob:   1 hit, 4 misses, 0 ship/s sunk
 
 ### Original Version
 ```
-battleship.py       ← single‑file implementation (requested baseline)
+battleship.py       ← single‑file implementation 
 test_battleship.py  ← unit tests
 README.md           ← documentation
 ```
@@ -85,10 +86,10 @@ README.md           ← documentation
 ```
 modular_version/
 │── main.py            ← game entry point
-│── board.py           ← grid + rendering
-│── placement.py       ← manual + random ship placement
+│── board.py           ← grid and rendering
+│── placement.py       ← manual and random ship placement
 │── gameplay.py        ← turns, hits, misses, scoreboard
-│── state.py           ← shared game variables + enums
+│── state.py           ← shared game variables and enums
 ```
 
 ✔ More readable  
@@ -97,7 +98,7 @@ modular_version/
 
 ---
 
-## 🔥 Future Enhancements
+## 🔥 Possible Future Enhancements
 
 | Feature | Status |
 |---|:---:|
@@ -122,3 +123,16 @@ AI was used for small productivity boosts, including:
 Core gameplay logic, turn handling, rules, and implementation remain hand‑written.
 
 ---
+
+## ⏱ Time Usage Summary
+
+The assignment allowed 8 hours — here is how the time was spent:
+
+| Task | Approx. Time |
+|---|:---:|
+| Reading rules + YouTube reference | **1–2 hours** |
+| Coding (logic, turns, placement, sinking rules) | **4–5 hours** |
+| Extra features (random placement, cleanup, comments) | **1 hour** |
+| Writing documentation & structure cleanup | **~30 min** |
+
+**Total: ≈ 8 hours**
