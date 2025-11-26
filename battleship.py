@@ -22,11 +22,15 @@ class Cell(Enum):
 
 # Per-player state
 player_grids = [None, None]            
-player_ship_positions = [None, None]   
+player_ship_positions = [None, None]
 ships_sunk = [0, 0]                    # ships sunk per player
 player_names = ["Player 1", "Player 2"]
 current_player = 0
 game_over = False
+
+# Used during ship placement to know which grid/list to update
+placing_grid = None
+placing_ship_positions = None
 
 # Reads and validates a coordinate like "A5" and returns (row, col) as 0-based ints.
 def input_coordinate(prompt):
@@ -171,7 +175,7 @@ def check_game_over():
     elif bullets_left <= 0:
         print("Out of bullets! Game over, you lose.")
         game_over = True
-        
+
 # Switches to the other player.
 def switch_player():
     global current_player
